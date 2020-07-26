@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 	"strings"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 
 	c "github.com/GreenVine/gcp-auth-util/common"
 	"golang.org/x/oauth2"

@@ -3,12 +3,13 @@ package cli
 import (
 	"flag"
 	"fmt"
-	c "github.com/GreenVine/gcp-auth-util/common"
-	"github.com/go-playground/validator/v10"
-	"golang.org/x/oauth2/google"
 	"os"
 	"strings"
 	"time"
+
+	c "github.com/GreenVine/gcp-auth-util/common"
+	"github.com/go-playground/validator/v10"
+	"golang.org/x/oauth2/google"
 )
 
 type CommandLineOptions struct {

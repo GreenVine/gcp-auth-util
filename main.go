@@ -3,15 +3,20 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/GreenVine/gcp-auth-util/auth"
 	"github.com/GreenVine/gcp-auth-util/cli"
 	c "github.com/GreenVine/gcp-auth-util/common"
 	"golang.org/x/oauth2"
-	"log"
-	"strings"
 )
 
 func main() {
+	os.Exit(boot())
+}
+
+func boot() int {
 	// Define shared variables
 	var token *oauth2.Token
 	var err error
@@ -19,7 +24,8 @@ func main() {
 	// Parse command line arguments
 	args, err := cli.ParseCommand()
 	if err != nil {
-		log.Fatalf("%v", err)
+		_, _ = fmt.Fprintf(os.Stderr, "%v", err)
+		return c.InvalidArgumentErrorExitCode
 	}
 
 	// Build request options
@@ -44,7 +50,8 @@ func main() {
 			token, err = auth.GetTokenByServiceAccount(requestContext, []byte(args.Credentials), requestOptions)
 		}
 	default:
-		log.Panicf("Unexpected authentication source: %v", args.AuthSource)
+		_, _ = fmt.Fprintf(os.Stderr, "Unexpected authentication source: %v", args.AuthSource)
+		return c.GenericErrorExitCode
 	}
 
 	if token != nil && err == nil {
@@ -53,9 +60,13 @@ func main() {
 		if strings.TrimSpace(accessToken) != "" { // successfully retrieved the token
 			fmt.Printf("%s", accessToken)
 		} else {
-			log.Fatalf("Empty token returned from the server")
+			_, _ = fmt.Fprintf(os.Stderr, "Empty token returned from the server")
+			return c.TokenErrorExitCode
 		}
 	} else {
-		log.Fatalf("Error occurred: %v", err)
+		_, _ = fmt.Fprintf(os.Stderr, "Error occurred: %v", err)
+		return c.GenericErrorExitCode
 	}
+
+	return 0
 }
