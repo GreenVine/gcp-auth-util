@@ -1,0 +1,52 @@
+.go_environ:
+  before_script:
+    - export PATH="${PATH}:${GOPATH}/bin"
+
+    - export GO_PROJECT_NAMESPACE_DIR="${GOPATH}/src/${GO_MODULE_BASE}"
+    - export GO_PROJECT_SRC_DIR="${GO_PROJECT_NAMESPACE_DIR}/${GO_PROJECT_NAME}"
+
+    # Install dependencies
+    - apk --no-cache add gcc musl-dev git
+
+    # Copy cached workspace items (e.g. dependencies) to GOPATH (if exists)
+    - if [ -d "${GOSPACE_DIR}" ]; then cp -rfp "${GOSPACE_DIR}/." "${GOPATH}"; fi
+
+    # Copy project source to GOPATH
+    - mkdir -p "${GO_PROJECT_NAMESPACE_DIR}"
+    - rm -rf "${GO_PROJECT_SRC_DIR}" # delete project source within GOPATH (if exists)
+    - cp -rfp "${GIT_CLONE_PATH}" "${GO_PROJECT_SRC_DIR}"
+
+    # Clear GOSPACE cache within CI_PROJECT_DIR (if exists)
+    - rm -rf "${GOSPACE_DIR}"
+
+    # Prepare empty directories for remaining build scripts
+    - mkdir -p "${GOSPACE_DIR}" "${ARTIFACT_DIR}"
+
+    # Navigate to project source under GOPATH
+    - cd "${GO_PROJECT_SRC_DIR}"
+
+    # Install modules
+    - go get -d
+
+  after_script:
+    - cp -rfp "${GOPATH}/." "${GOSPACE_DIR}"
+    - rm -rf "${GOSPACE_DIR}/src/${GO_MODULE_BASE}/${CI_PROJECT_NAME}" # do not cache project source within GOSPACE
+
+.go_build_bin:
+  extends: .go_environ
+  stage: build:bin
+  tags:
+    - build-optimised
+
+  script:
+    # Build binaries
+    - mkdir -p "${ARTIFACT_DIR}/tools"
+    - go build -o "${ARTIFACT_DIR}/${PRODUCT_NAME}-${GOOS}-${GOARCH}${GOEXT}" -ldflags="-s -w" # Build optimised binary
+
+    # Run tests
+    - go test -v ./...
+
+  artifacts:
+    name: "${PRODUCT_NAME}-release-${GOOS}-${GOARCH}"
+    paths:
+      - "build"

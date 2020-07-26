@@ -1,0 +1,47 @@
+### Lint Stages ###
+lint:
+  extends: .go_environ
+  stage: validate
+  tags:
+    - test-optimised
+
+  script:
+    # Install linter
+    - wget -T 10 -qO- "${GOLANGCI_LINT_INSTALL_URL}" | sh -s -- -b /usr/bin "v${GOLANGCI_LINT_VERSION}"
+
+    - golangci-lint run --timeout 5m
+
+### Build Binary Stages ###
+build:bin:linux_amd64:
+  extends: .go_build_bin
+  variables:
+    GOOS: linux
+    GOARCH: amd64
+    # ref: https://forums.docker.com/t/standard-init-linux-go-195-exec-user-process-caused-no-such-file-or-directory/43777
+    CGO_ENABLED: 0
+
+build:bin:linux_mipsle:
+  extends: .go_build_bin
+  variables:
+    GOOS: linux
+    GOARCH: mipsle
+
+build:bin:darwin_amd64:
+  extends: .go_build_bin
+  variables:
+    GOOS: darwin
+    GOARCH: amd64
+
+build:bin:windows_386:
+  extends: .go_build_bin
+  variables:
+    GOOS: windows
+    GOARCH: 386
+    GOEXT: .exe
+
+build:bin:windows_amd64:
+  extends: .go_build_bin
+  variables:
+    GOOS: windows
+    GOARCH: amd64
+    GOEXT: .exe

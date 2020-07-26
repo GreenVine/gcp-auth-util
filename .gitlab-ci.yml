@@ -1,0 +1,35 @@
+stages:
+  - validate
+  - build:bin
+  - release
+
+variables:
+  # Setup environment
+  GIT_CLONE_PATH: "${CI_BUILDS_DIR}/project"
+  GOSPACE_DIR: "${CI_PROJECT_DIR}/.ci/gospace"
+  ARTIFACT_DIR: "${CI_PROJECT_DIR}/build"
+
+  # Go project setup
+  GO_MODULE_BASE: github.com/GreenVine
+  GO_PROJECT_NAME: gcp-auth-util
+  PRODUCT_NAME: gau
+
+  # Version for golangci-lint
+  GOLANGCI_LINT_INSTALL_URL: https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh
+  GOLANGCI_LINT_VERSION: "1.29.0"
+
+  # GCP-specific settings
+  GCP_METADATA_TOKEN_URL: http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token
+
+include:
+  - local: .gitlab/ci/common.yml
+  - local: .gitlab/ci/build.yml
+
+default:
+  image: golang:alpine
+
+  cache:
+    key: ${CI_COMMIT_REF_SLUG} # per branch caching
+    paths:
+      - ".ci/gospace/src"
+      - ".ci/gospace/pkg/mod"
