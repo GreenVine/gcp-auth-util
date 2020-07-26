@@ -1,0 +1,11 @@
+### Release Artifacts Stages ###
+release:
+  stage: release:artifacts
+  image: google/cloud-sdk:alpine
+  tags:
+    - deploy-optimised
+
+  cache: {}
+
+  # Upload binaries to artifacts store
+  script: gsutil cp -r build/* "${RELEASE_ARTIFACTS_BUCKET}/${CI_PROJECT_PATH}/${CI_COMMIT_SHA}/artifacts"

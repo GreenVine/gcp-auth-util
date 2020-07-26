@@ -1,7 +1,8 @@
 stages:
   - validate
   - build:bin
-  - release
+  - release:artifacts
+  - release:tags
 
 variables:
   # Setup environment
@@ -24,6 +25,7 @@ variables:
 include:
   - local: .gitlab/ci/common.yml
   - local: .gitlab/ci/build.yml
+  - local: .gitlab/ci/release.yml
 
 default:
   image: golang:alpine
