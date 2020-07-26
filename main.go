@@ -24,7 +24,7 @@ func boot() int {
 	// Parse command line arguments
 	args, err := cli.ParseCommand()
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "%v", err)
+		_, _ = fmt.Fprintf(os.Stderr, "%v\n", err)
 		return c.InvalidArgumentErrorExitCode
 	}
 
@@ -50,7 +50,7 @@ func boot() int {
 			token, err = auth.GetTokenByServiceAccount(requestContext, []byte(args.Credentials), requestOptions)
 		}
 	default:
-		_, _ = fmt.Fprintf(os.Stderr, "Unexpected authentication source: %v", args.AuthSource)
+		_, _ = fmt.Fprintf(os.Stderr, "Unexpected authentication source: %v\n", args.AuthSource)
 		return c.GenericErrorExitCode
 	}
 
@@ -60,11 +60,11 @@ func boot() int {
 		if strings.TrimSpace(accessToken) != "" { // successfully retrieved the token
 			fmt.Printf("%s", accessToken)
 		} else {
-			_, _ = fmt.Fprintf(os.Stderr, "Empty token returned from the server")
+			_, _ = fmt.Fprintln(os.Stderr, "Empty token returned from the server")
 			return c.TokenErrorExitCode
 		}
 	} else {
-		_, _ = fmt.Fprintf(os.Stderr, "Error occurred: %v", err)
+		_, _ = fmt.Fprintln(os.Stderr, err)
 		return c.GenericErrorExitCode
 	}
 

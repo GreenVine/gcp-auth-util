@@ -58,7 +58,7 @@ func ParseCommand() (CommandLineOptions, error) {
 		c.GetEnvString("TOKEN_URL", google.JWTTokenURL), "OAuth2 authentication endpoint")
 
 	flag.Usage = func() {
-		_, _ = fmt.Fprintf(os.Stderr, "GCP Auth Utility (Build: %s)\n\nUsage of %s:\n", c.BuildTag, os.Args[0])
+		_, _ = fmt.Fprintf(os.Stderr, "GCP Auth Utility (%s)\n\nUsage of %s:\n", c.BuildTag, os.Args[0])
 
 		flag.PrintDefaults()
 	}
