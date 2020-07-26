@@ -39,14 +39,19 @@
     - build-optimised
 
   script:
+    # Add release info to binary
+    - |
+      printf "package common\nconst BuildTag = \"Release: ${CI_COMMIT_TAG:-Untagged}, Build ${CI_COMMIT_SHORT_SHA:-Unversioned}\"" \
+        > common/release.go
+
     # Build binaries
-    - mkdir -p "${ARTIFACT_DIR}/tools"
-    - go build -o "${ARTIFACT_DIR}/${PRODUCT_NAME}-${GOOS}-${GOARCH}${GOEXT}" -ldflags="-s -w" # Build optimised binary
+    - go build -o "${ARTIFACT_DIR}/${PRODUCT_NAME}-${GOOS}-${GOARCH}${GOEXT}" -ldflags="-s -w"
 
     # Run tests
     - go test -v ./...
 
   artifacts:
     name: "${PRODUCT_NAME}-release-${GOOS}-${GOARCH}"
+    expire_in: 1w
     paths:
       - "build"
