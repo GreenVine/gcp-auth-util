@@ -35,7 +35,7 @@ func ParseCommand() (CommandLineOptions, error) {
 	// Get variables from command line and fallback to default value to environment variable / hardcoded value
 	flag.StringVar(
 		&options.Audience, "audience",
-		c.GetEnvString("AUDIENCE", ""), "Token audience")
+		c.GetEnvString("AUDIENCE", google.JWTTokenURL), "Token audience")
 	flag.StringVar(
 		&options.AuthSource, "auth-source",
 		c.GetEnvString("AUTH_SOURCE", "service-account"), "Authentication source: service-account")
