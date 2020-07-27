@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// GetEnvBool returns a named boolean environment variable, or a fallback value if it doesn't exist
 func GetEnvBool(name string, fallback bool) bool {
 	if val, ok := os.LookupEnv(name); ok {
 		switch val {
@@ -20,6 +21,7 @@ func GetEnvBool(name string, fallback bool) bool {
 	return fallback
 }
 
+// GetEnvDuration returns a named duration environment variable, or a fallback value if it doesn't exist
 func GetEnvDuration(name string, fallback time.Duration) time.Duration {
 	if val, ok := os.LookupEnv(name); ok {
 		if valUint, err := strconv.ParseUint(val, 10, 64); err == nil {
@@ -30,6 +32,7 @@ func GetEnvDuration(name string, fallback time.Duration) time.Duration {
 	return fallback
 }
 
+// GetEnvString returns a named string environment variable, or a fallback value if it doesn't exist
 func GetEnvString(name, fallback string) string {
 	if val, ok := os.LookupEnv(name); ok {
 		return val
@@ -47,6 +50,7 @@ func IsFileExists(path string) bool {
 	return !info.IsDir()
 }
 
+// ReadEntireFile reads the entire file and returns its contents
 func ReadEntireFile(path string) ([]byte, error) {
 	file, err := os.Open(path)
 	if err != nil {

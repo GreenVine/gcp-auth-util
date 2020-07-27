@@ -2,7 +2,7 @@ package cli
 
 import "strings"
 
-type stringSlice []string
+type stringSlice []string // custom struct to accept repeated arguments in `flag`
 
 func (f *stringSlice) String() string {
 	return strings.Join(*f, ",")

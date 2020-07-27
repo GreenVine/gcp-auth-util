@@ -12,6 +12,7 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
+// CommandLineOptions describes arguments accepted by command line interface
 type CommandLineOptions struct {
 	Audience       string        `validate:"omitempty"`
 	AuthSource     string        `validate:"omitempty,oneof='service-account'"`
@@ -24,6 +25,7 @@ type CommandLineOptions struct {
 	TokenURL       string        `validate:"omitempty,url"`
 }
 
+// IsIDTokenType checks if CLI options are representing an ID token request. Otherwise it's an access token.
 func (options *CommandLineOptions) IsIDTokenType() bool {
 	return options.TokenType == "id"
 }
