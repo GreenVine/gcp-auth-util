@@ -27,4 +27,4 @@ release:artifacts:
     - export ARTIFACT_PREFIX=$(if [ ! -z "${CI_COMMIT_TAG}" ]; then echo "tagged/${CI_COMMIT_TAG}"; else echo "nightly/${CI_COMMIT_SHA:-unversioned}"; fi)
 
     # Upload binaries to artifacts store
-    - gsutil -m cp -P -r build/* "${RELEASE_ARTIFACTS_BUCKET}/${CI_PROJECT_PATH}/${ARTIFACT_PREFIX}/artifacts"
+    - gsutil -m cp -P -r ${ARTIFACT_DIR}/* "${RELEASE_ARTIFACTS_BUCKET}/${CI_PROJECT_PATH}/${ARTIFACT_PREFIX}/artifacts"
