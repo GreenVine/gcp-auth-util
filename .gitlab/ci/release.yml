@@ -27,4 +27,12 @@ release:artifacts:
     - export ARTIFACT_PREFIX=$(if [ ! -z "${CI_COMMIT_TAG}" ]; then echo "tagged/${CI_COMMIT_TAG}"; else echo "nightly/${CI_COMMIT_SHA:-unversioned}"; fi)
 
     # Upload binaries to artifacts store
-    - gsutil -m cp -P -r ${ARTIFACT_DIR}/* "${RELEASE_ARTIFACTS_BUCKET}/${CI_PROJECT_PATH}/${ARTIFACT_PREFIX}/artifacts"
+    - |
+      gsutil -m \
+        -h "Cache-Control:public,max-age=${ARTIFACT_CACHE_TIME:-86400}" \
+        -h "x-goog-meta-Commit-Id:${CI_COMMIT_SHA}" \
+        -h "x-goog-meta-Commit-Tag:${CI_COMMIT_TAG}" \
+        -h "x-goog-meta-Commit-Branch:${CI_COMMIT_BRANCH}" \
+        -h "x-goog-meta-Atlas-Project:${CI_PROJECT_PATH}" \
+        -h "x-goog-meta-Atlas-Job-ID:${CI_JOB_ID}" \
+        cp -r ${ARTIFACT_DIR}/* "${RELEASE_ARTIFACTS_BUCKET}/${CI_PROJECT_PATH}/${ARTIFACT_PREFIX}/artifacts"

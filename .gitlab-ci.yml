@@ -9,6 +9,7 @@ variables:
   GIT_CLONE_PATH: "${CI_BUILDS_DIR}/project"
   GOSPACE_DIR: "${CI_PROJECT_DIR}/.ci/gospace"
   ARTIFACT_DIR: "${CI_PROJECT_DIR}/build"
+  ARTIFACT_CACHE_TIME: 2678400 # in seconds (default: 1 month)
 
   # Go project setup
   GO_MODULE_BASE: github.com/GreenVine
