@@ -21,7 +21,7 @@ type TokenRequestOptions struct {
 	Expires        time.Duration `json:"expires" validate:"gt=0"`
 	PrivateKey     string        `json:"private_key" validate:"required"`
 	PrivateKeyID   string        `json:"private_key_id" validate:"omitempty"`
-	Scopes         []string      `json:"scopes" validate:"required_without=UseIDToken,min=1,dive,url"`
+	Scopes         []string      `json:"scopes" validate:"required_without=UseIDToken|min=1,dive,url"`
 	Subject        string        `json:"subject" validate:"omitempty"`
 	TargetAudience string        `json:"target_audience" validate:"required_with=UseIDToken,url|min=0"`
 	TokenURL       string        `json:"token_url" validate:"required,url"`
